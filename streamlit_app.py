@@ -189,12 +189,7 @@ with st.sidebar:
     
     # API 키 입력
     st.markdown("---")
-    openai_api_key = st.text_input(
-        "🔑 OpenAI API Key", 
-        type="password", 
-        help="OpenAI API 키를 입력하세요.",
-        placeholder="API 키를 입력하세요"
-    )
+    openai_api_key = st.secrets['openai']['API_KEY']
     
     # 모델 선택
     st.markdown("---")
@@ -339,7 +334,7 @@ try:
     client = OpenAI(api_key=openai_api_key)
     # 간단한 테스트 호출로 키 유효성 검증
     test_response = client.models.list()
-except openai.AuthenticationError:
+except openai.AuthenticationError as ae:
     st.markdown("""
     <div class="error-box">
         <h4>🚫 인증 실패</h4>
@@ -347,6 +342,7 @@ except openai.AuthenticationError:
         <p><small>💡 <strong>확인사항:</strong> API 키가 올바르게 입력되었는지, 계정에 충분한 크레딧이 있는지 확인해주세요.</small></p>
     </div>
     """, unsafe_allow_html=True)
+    print({str(ae)})
     st.stop()
 except Exception as e:
     st.markdown(f"""
